@@ -1,0 +1,13 @@
+[project]
+name = "ab-prompt-lab"
+version = "2.0.0"
+description = "A/B prompt experiments with traffic split, variant metrics, and automatic winner hints — compare prompt variants on live (mock) traffic with stored impressions and scores."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

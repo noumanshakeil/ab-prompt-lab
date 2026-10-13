@@ -1,53 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="/static/styles.css" />
-</head>
-<body>
-  <main>
-    <h1>{{ title }}</h1>
-    <p class="sub">{{ description }} · LLM <span class="pill">{{ llm_mode }}</span></p>
-    <div class="grid">
-      <section class="card">
-        <h2>Create experiment</h2>
-        <form method="post" action="/ui/create">
-        <label>name</label><input name="name" placeholder="name" required />
-<label>variant_a</label><input name="variant_a" placeholder="variant_a" required />
-<label>variant_b</label><input name="variant_b" placeholder="variant_b" required />
-          <button type="submit">Save</button>
-        </form>
-        <h2 style="margin-top:1.25rem">AI action: {{ action }}</h2>
-        <p class="sub">{{ action_desc }}</p>
-        <form method="post" action="/ui/action">
-          <label>prompt</label>
-          <textarea name="prompt" rows="4" placeholder="Describe what you need..."></textarea>
-          <button type="submit">Run {{ action }}</button>
-        </form>
-        {% if last_result %}
-        <h3>Last result</h3>
-        <pre>{{ last_result }}</pre>
-        {% endif %}
-      </section>
-      <section class="card">
-        <h2>{{ resource }} ({{ items|length }})</h2>
-        <table>
-          <thead><tr><th>id</th><th>data</th></tr></thead>
-          <tbody>
-          {% for item in items %}
-            <tr>
-              <td>{{ item.id }}</td>
-              <td><code>{{ item }}</code></td>
-            </tr>
-          {% else %}
-            <tr><td colspan="2">No items yet</td></tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </section>
-    </div>
-  </main>
-</body>
-</html>
+<!DOCTYPE html><html><head><meta charset="utf-8"/><title>{{ title }}</title>
+<link rel="stylesheet" href="/static/styles.css"/></head><body><main>
+<h1>{{ title }}</h1><p class="sub">Traffic split, variant metrics, winner selection.</p>
+<div class="grid">
+<section class="card"><h2>New experiment</h2>
+<form method="post" action="/ui/experiments"><input name="name"/><textarea name="prompt_a" rows="3">Variant A system</textarea>
+<textarea name="prompt_b" rows="3">Variant B system</textarea><input name="traffic_a" type="number" value="50"/><button type="submit">Create</button></form>
+<ul>{% for e in experiments %}<li><a href="/?experiment_id={{ e.id }}">{{ e.name }}</a> {% if e.winner %}<span class="pill">winner {{ e.winner }}</span>{% endif %}</li>{% endfor %}</ul>
+</section>
+<section class="card">{% if experiment_id %}
+<h2>Run</h2><form method="post" action="/ui/run"><input type="hidden" name="experiment_id" value="{{ experiment_id }}"/>
+<input name="subject" placeholder="user id"/><textarea name="user_input" rows="2"></textarea><button type="submit">Assign & run</button></form>
+{% if metrics %}<h3>Metrics</h3><ul>{% for v in metrics.variants %}<li>{{ v.label }}: {{ v.impressions }} imp, avg {{ v.avg_score }}</li>{% endfor %}
+{% if metrics.leader %}<li class="pill">leader {{ metrics.leader }}</li>{% endif %}</ul>{% endif %}
+{% else %}<p class="sub">Select an experiment.</p>{% endif %}</section></div></main></body></html>
