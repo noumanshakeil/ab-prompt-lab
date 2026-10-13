@@ -1,0 +1,12 @@
+{
+  "project": "ab-prompt-lab",
+  "resource": "experiments",
+  "samples": [
+    {
+      "id": "ab1",
+      "name": "tone",
+      "variant_a": "formal",
+      "variant_b": "casual"
+    }
+  ]
+}
